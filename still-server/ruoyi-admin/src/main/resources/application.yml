@@ -126,9 +126,13 @@ springdoc:
     tags-sorter: alpha
   group-configs:
     - group: 'default'
-      display-name: '测试模块'
-      paths-to-match: '/**'
-      packages-to-scan: com.ruoyi.web.controller.tool
+      display-name: '管理端接口'
+      paths-to-match: '/system/**,/monitor/**,/tool/**,/common/**'
+      packages-to-scan: com.ruoyi.web.controller
+    - group: 'mini'
+      display-name: '小程序端接口'
+      paths-to-match: '/mini/**'
+      packages-to-scan: com.ruoyi.web.controller.mini
 
 # 防盗链配置
 referer:

@@ -108,3 +108,21 @@ CREATE TABLE biz_volunteer (
                                PRIMARY KEY (volunteer_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='志愿者申请与档案表';
 
+-- ----------------------------
+-- 微信小程序 C端用户表
+-- ----------------------------
+DROP TABLE IF EXISTS biz_wx_user;
+CREATE TABLE biz_wx_user (
+                             wx_user_id      bigint(20)      NOT NULL AUTO_INCREMENT    COMMENT '小程序用户主键',
+                             openid          varchar(64)     NOT NULL                   COMMENT '微信OpenID(唯一标识)',
+                             unionid         varchar(64)     DEFAULT ''                 COMMENT '微信UnionID(跨应用标识,备用)',
+                             nickname        varchar(50)     DEFAULT '微信用户'         COMMENT '用户昵称',
+                             avatar_url      varchar(255)    DEFAULT ''                 COMMENT '头像地址',
+                             phone           varchar(20)     DEFAULT ''                 COMMENT '绑定的手机号',
+                             user_type       char(1)         DEFAULT '0'                COMMENT '身份类型(0:普通学生 1:摊贩 2:志愿者)',
+                             status          char(1)         DEFAULT '0'                COMMENT '账号状态(0正常 1封禁)',
+                             create_time     datetime                                   COMMENT '首次授权时间',
+                             last_login_time datetime                                   COMMENT '最后登录时间',
+                             PRIMARY KEY (wx_user_id),
+                             UNIQUE KEY idx_openid (openid) -- 保证OpenID唯一
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='小程序微信用户表';
