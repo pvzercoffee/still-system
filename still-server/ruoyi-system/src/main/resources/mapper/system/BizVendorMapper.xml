@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizVendorMapper">
+    
+    <resultMap type="BizVendor" id="BizVendorResult">
+        <result property="vendorId"    column="vendor_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="vendorName"    column="vendor_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="goodsCategory"    column="goods_category"    />
+        <result property="healthCertUrl"    column="health_cert_url"    />
+        <result property="creditScore"    column="credit_score"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBizVendorVo">
+        select vendor_id, user_id, vendor_name, phone, goods_category, health_cert_url, credit_score, status, del_flag, create_by, create_time, update_by, update_time, remark from biz_vendor
+    </sql>
+
+    <select id="selectBizVendorList" parameterType="BizVendor" resultMap="BizVendorResult">
+        <include refid="selectBizVendorVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="vendorName != null  and vendorName != ''"> and vendor_name like concat('%', #{vendorName}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="goodsCategory != null  and goodsCategory != ''"> and goods_category = #{goodsCategory}</if>
+            <if test="healthCertUrl != null  and healthCertUrl != ''"> and health_cert_url = #{healthCertUrl}</if>
+            <if test="creditScore != null "> and credit_score = #{creditScore}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectBizVendorByVendorId" parameterType="Long" resultMap="BizVendorResult">
+        <include refid="selectBizVendorVo"/>
+        where vendor_id = #{vendorId}
+    </select>
+
+    <insert id="insertBizVendor" parameterType="BizVendor" useGeneratedKeys="true" keyProperty="vendorId">
+        insert into biz_vendor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="vendorName != null and vendorName != ''">vendor_name,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="goodsCategory != null">goods_category,</if>
+            <if test="healthCertUrl != null">health_cert_url,</if>
+            <if test="creditScore != null">credit_score,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="vendorName != null and vendorName != ''">#{vendorName},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="goodsCategory != null">#{goodsCategory},</if>
+            <if test="healthCertUrl != null">#{healthCertUrl},</if>
+            <if test="creditScore != null">#{creditScore},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizVendor" parameterType="BizVendor">
+        update biz_vendor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="vendorName != null and vendorName != ''">vendor_name = #{vendorName},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="goodsCategory != null">goods_category = #{goodsCategory},</if>
+            <if test="healthCertUrl != null">health_cert_url = #{healthCertUrl},</if>
+            <if test="creditScore != null">credit_score = #{creditScore},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where vendor_id = #{vendorId}
+    </update>
+
+    <delete id="deleteBizVendorByVendorId" parameterType="Long">
+        delete from biz_vendor where vendor_id = #{vendorId}
+    </delete>
+
+    <delete id="deleteBizVendorByVendorIds" parameterType="String">
+        delete from biz_vendor where vendor_id in 
+        <foreach item="vendorId" collection="array" open="(" separator="," close=")">
+            #{vendorId}
+        </foreach>
+    </delete>
+</mapper>

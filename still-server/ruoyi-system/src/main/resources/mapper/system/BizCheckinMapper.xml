@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizCheckinMapper">
+    
+    <resultMap type="BizCheckin" id="BizCheckinResult">
+        <result property="checkinId"    column="checkin_id"    />
+        <result property="vendorId"    column="vendor_id"    />
+        <result property="fenceId"    column="fence_id"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="checkoutTime"    column="checkout_time"    />
+    </resultMap>
+
+    <sql id="selectBizCheckinVo">
+        select checkin_id, vendor_id, fence_id, latitude, longitude, status, create_time, checkout_time from biz_checkin
+    </sql>
+
+    <select id="selectBizCheckinList" parameterType="BizCheckin" resultMap="BizCheckinResult">
+        <include refid="selectBizCheckinVo"/>
+        <where>  
+            <if test="vendorId != null "> and vendor_id = #{vendorId}</if>
+            <if test="fenceId != null "> and fence_id = #{fenceId}</if>
+            <if test="latitude != null "> and latitude = #{latitude}</if>
+            <if test="longitude != null "> and longitude = #{longitude}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="checkoutTime != null "> and checkout_time = #{checkoutTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBizCheckinByCheckinId" parameterType="Long" resultMap="BizCheckinResult">
+        <include refid="selectBizCheckinVo"/>
+        where checkin_id = #{checkinId}
+    </select>
+
+    <insert id="insertBizCheckin" parameterType="BizCheckin" useGeneratedKeys="true" keyProperty="checkinId">
+        insert into biz_checkin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vendorId != null">vendor_id,</if>
+            <if test="fenceId != null">fence_id,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="checkoutTime != null">checkout_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vendorId != null">#{vendorId},</if>
+            <if test="fenceId != null">#{fenceId},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="checkoutTime != null">#{checkoutTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizCheckin" parameterType="BizCheckin">
+        update biz_checkin
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vendorId != null">vendor_id = #{vendorId},</if>
+            <if test="fenceId != null">fence_id = #{fenceId},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="checkoutTime != null">checkout_time = #{checkoutTime},</if>
+        </trim>
+        where checkin_id = #{checkinId}
+    </update>
+
+    <delete id="deleteBizCheckinByCheckinId" parameterType="Long">
+        delete from biz_checkin where checkin_id = #{checkinId}
+    </delete>
+
+    <delete id="deleteBizCheckinByCheckinIds" parameterType="String">
+        delete from biz_checkin where checkin_id in 
+        <foreach item="checkinId" collection="array" open="(" separator="," close=")">
+            #{checkinId}
+        </foreach>
+    </delete>
+</mapper>

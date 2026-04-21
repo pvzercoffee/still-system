@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizVolunteerMapper">
+    
+    <resultMap type="BizVolunteer" id="BizVolunteerResult">
+        <result property="volunteerId"    column="volunteer_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="studentName"    column="student_name"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="college"    column="college"    />
+        <result property="phone"    column="phone"    />
+        <result property="status"    column="status"    />
+        <result property="patrolCount"    column="patrol_count"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBizVolunteerVo">
+        select volunteer_id, user_id, student_name, student_id, college, phone, status, patrol_count, create_time, remark from biz_volunteer
+    </sql>
+
+    <select id="selectBizVolunteerList" parameterType="BizVolunteer" resultMap="BizVolunteerResult">
+        <include refid="selectBizVolunteerVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="studentId != null  and studentId != ''"> and student_id = #{studentId}</if>
+            <if test="college != null  and college != ''"> and college = #{college}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="patrolCount != null "> and patrol_count = #{patrolCount}</if>
+        </where>
+    </select>
+    
+    <select id="selectBizVolunteerByVolunteerId" parameterType="Long" resultMap="BizVolunteerResult">
+        <include refid="selectBizVolunteerVo"/>
+        where volunteer_id = #{volunteerId}
+    </select>
+
+    <insert id="insertBizVolunteer" parameterType="BizVolunteer" useGeneratedKeys="true" keyProperty="volunteerId">
+        insert into biz_volunteer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="studentName != null and studentName != ''">student_name,</if>
+            <if test="studentId != null and studentId != ''">student_id,</if>
+            <if test="college != null">college,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="status != null">status,</if>
+            <if test="patrolCount != null">patrol_count,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="studentName != null and studentName != ''">#{studentName},</if>
+            <if test="studentId != null and studentId != ''">#{studentId},</if>
+            <if test="college != null">#{college},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="status != null">#{status},</if>
+            <if test="patrolCount != null">#{patrolCount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizVolunteer" parameterType="BizVolunteer">
+        update biz_volunteer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="studentName != null and studentName != ''">student_name = #{studentName},</if>
+            <if test="studentId != null and studentId != ''">student_id = #{studentId},</if>
+            <if test="college != null">college = #{college},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="patrolCount != null">patrol_count = #{patrolCount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where volunteer_id = #{volunteerId}
+    </update>
+
+    <delete id="deleteBizVolunteerByVolunteerId" parameterType="Long">
+        delete from biz_volunteer where volunteer_id = #{volunteerId}
+    </delete>
+
+    <delete id="deleteBizVolunteerByVolunteerIds" parameterType="String">
+        delete from biz_volunteer where volunteer_id in 
+        <foreach item="volunteerId" collection="array" open="(" separator="," close=")">
+            #{volunteerId}
+        </foreach>
+    </delete>
+</mapper>

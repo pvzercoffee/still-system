@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizFeedbackMapper">
+    
+    <resultMap type="BizFeedback" id="BizFeedbackResult">
+        <result property="feedbackId"    column="feedback_id"    />
+        <result property="vendorId"    column="vendor_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="rating"    column="rating"    />
+        <result property="content"    column="content"    />
+        <result property="replyContent"    column="reply_content"    />
+        <result property="replyTime"    column="reply_time"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBizFeedbackVo">
+        select feedback_id, vendor_id, user_id, rating, content, reply_content, reply_time, create_time from biz_feedback
+    </sql>
+
+    <select id="selectBizFeedbackList" parameterType="BizFeedback" resultMap="BizFeedbackResult">
+        <include refid="selectBizFeedbackVo"/>
+        <where>  
+            <if test="vendorId != null "> and vendor_id = #{vendorId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="rating != null "> and rating = #{rating}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="replyContent != null  and replyContent != ''"> and reply_content = #{replyContent}</if>
+            <if test="replyTime != null "> and reply_time = #{replyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBizFeedbackByFeedbackId" parameterType="Long" resultMap="BizFeedbackResult">
+        <include refid="selectBizFeedbackVo"/>
+        where feedback_id = #{feedbackId}
+    </select>
+
+    <insert id="insertBizFeedback" parameterType="BizFeedback" useGeneratedKeys="true" keyProperty="feedbackId">
+        insert into biz_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vendorId != null">vendor_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="rating != null">rating,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="replyContent != null">reply_content,</if>
+            <if test="replyTime != null">reply_time,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vendorId != null">#{vendorId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="rating != null">#{rating},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="replyContent != null">#{replyContent},</if>
+            <if test="replyTime != null">#{replyTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizFeedback" parameterType="BizFeedback">
+        update biz_feedback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vendorId != null">vendor_id = #{vendorId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="rating != null">rating = #{rating},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="replyContent != null">reply_content = #{replyContent},</if>
+            <if test="replyTime != null">reply_time = #{replyTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where feedback_id = #{feedbackId}
+    </update>
+
+    <delete id="deleteBizFeedbackByFeedbackId" parameterType="Long">
+        delete from biz_feedback where feedback_id = #{feedbackId}
+    </delete>
+
+    <delete id="deleteBizFeedbackByFeedbackIds" parameterType="String">
+        delete from biz_feedback where feedback_id in 
+        <foreach item="feedbackId" collection="array" open="(" separator="," close=")">
+            #{feedbackId}
+        </foreach>
+    </delete>
+</mapper>
