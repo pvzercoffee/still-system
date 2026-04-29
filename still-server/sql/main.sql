@@ -126,3 +126,19 @@ CREATE TABLE biz_wx_user (
                              PRIMARY KEY (wx_user_id),
                              UNIQUE KEY idx_openid (openid) -- 保证OpenID唯一
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='小程序微信用户表';
+
+-- ----------------------------
+-- 13、摊贩二维码表 (短标识到跳转目标的映射)
+-- 说明：用于管理商贩的推广/扫码二维码，短标识作为外部暴露的主键
+-- ----------------------------
+DROP TABLE IF EXISTS biz_vendor_qrcode;
+CREATE TABLE biz_vendor_qrcode (
+                             short_id          varchar(64)     NOT NULL                   COMMENT '二维码短标识(主键/外部短码)',
+                             target_type       int(4)          NOT NULL DEFAULT 1        COMMENT '跳转类型（1:商贩主页,2:支付页,3:投诉页,4:监管页）',
+                             vendor_id         bigint(20)     DEFAULT NULL              COMMENT '对应的商贩ID(关联biz_vendor.vendor_id)',
+                             status            int(4)          DEFAULT 1                 COMMENT '二维码状态（1:正常,0:失效/封禁）',
+                             create_time       datetime                                   COMMENT '创建时间',
+                             update_time       datetime                                   COMMENT '更新时间',
+                             PRIMARY KEY (short_id),
+                             KEY idx_vendor_id (vendor_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='摊贩二维码管理表';

@@ -9,10 +9,10 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="留言学生ID(可为空代表匿名)" prop="userId">
+      <el-form-item label="留言学生ID" prop="userId">
         <el-input
           v-model="queryParams.userId"
-          placeholder="请输入留言学生ID(可为空代表匿名)"
+          placeholder="请输入留言学生ID"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -85,7 +85,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="留言ID" align="center" prop="feedbackId" />
       <el-table-column label="所属摊贩ID" align="center" prop="vendorId" />
-      <el-table-column label="留言学生ID(可为空代表匿名)" align="center" prop="userId" />
+      <el-table-column label="留言学生ID" align="center" prop="userId" />
       <el-table-column label="评分(1-5星)" align="center" prop="rating" />
       <el-table-column label="留言内容" align="center" prop="content" />
       <el-table-column label="摊主回复内容" align="center" prop="replyContent" />
@@ -120,8 +120,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="留言学生ID(可为空代表匿名)" prop="userId">
-              <el-input v-model="form.userId" placeholder="请输入留言学生ID(可为空代表匿名)" />
+            <el-form-item label="留言学生ID" prop="userId">
+              <el-input v-model="form.userId" placeholder="请输入留言学生ID" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -193,7 +193,7 @@ const data = reactive({
       { required: true, message: "所属摊贩ID不能为空", trigger: "blur" }
     ],
     userId: [
-      { required: true, message: "留言学生ID(可为空代表匿名)不能为空", trigger: "blur" }
+      { required: true, message: "留言学生ID不能为空", trigger: "blur" }
     ],
     rating: [
       { required: true, message: "评分(1-5星)不能为空", trigger: "blur" }

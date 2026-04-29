@@ -9,10 +9,10 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="巡查员/志愿者ID(关联sys_user)" prop="inspectorId">
+      <el-form-item label="志愿者ID" prop="inspectorId">
         <el-input
           v-model="queryParams.inspectorId"
-          placeholder="请输入巡查员/志愿者ID(关联sys_user)"
+          placeholder="请输入志愿者ID"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -77,9 +77,9 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="记录ID" align="center" prop="violationId" />
       <el-table-column label="违规摊贩ID" align="center" prop="vendorId" />
-      <el-table-column label="巡查员/志愿者ID(关联sys_user)" align="center" prop="inspectorId" />
-      <el-table-column label="违规类型(占道/卫生差/无证)" align="center" prop="violationType" />
-      <el-table-column label="现场照片(多张逗号分隔)" align="center" prop="photoUrl" />
+      <el-table-column label="志愿者ID" align="center" prop="inspectorId" />
+      <el-table-column label="违规类型" align="center" prop="violationType" />
+      <el-table-column label="现场照片" align="center" prop="photoUrl" />
       <el-table-column label="扣除积分值" align="center" prop="deductScore" />
       <el-table-column label="处理状态" align="center" prop="status" />
       <el-table-column label="违规详细描述" align="center" prop="remark" />
@@ -109,12 +109,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="巡查员/志愿者ID(关联sys_user)" prop="inspectorId">
-              <el-input v-model="form.inspectorId" placeholder="请输入巡查员/志愿者ID(关联sys_user)" />
+            <el-form-item label="志愿者ID" prop="inspectorId">
+              <el-input v-model="form.inspectorId" placeholder="请输入志愿者ID" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="现场照片(多张逗号分隔)" prop="photoUrl">
+            <el-form-item label="现场照片" prop="photoUrl">
               <el-input v-model="form.photoUrl" type="textarea" placeholder="请输入内容" />
             </el-form-item>
           </el-col>
@@ -172,10 +172,10 @@ const data = reactive({
       { required: true, message: "违规摊贩ID不能为空", trigger: "blur" }
     ],
     inspectorId: [
-      { required: true, message: "巡查员/志愿者ID(关联sys_user)不能为空", trigger: "blur" }
+      { required: true, message: "志愿者ID不能为空", trigger: "blur" }
     ],
     violationType: [
-      { required: true, message: "违规类型(占道/卫生差/无证)不能为空", trigger: "change" }
+      { required: true, message: "违规类型不能为空", trigger: "change" }
     ],
   }
 })

@@ -1,15 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="关联sys_user表的账号ID" prop="userId">
+      <el-form-item label="账号ID" prop="userId">
         <el-input
           v-model="queryParams.userId"
-          placeholder="请输入关联sys_user表的账号ID"
+          placeholder="请输入关联账号ID"
           clearable
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="摊主真实姓名" prop="vendorName">
+      <el-form-item label="姓名" prop="vendorName">
         <el-input
           v-model="queryParams.vendorName"
           placeholder="请输入摊主真实姓名"
@@ -25,26 +25,19 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="主营品类(如: 烧烤, 水果)" prop="goodsCategory">
+      <el-form-item label="主营品类" prop="goodsCategory">
         <el-input
           v-model="queryParams.goodsCategory"
-          placeholder="请输入主营品类(如: 烧烤, 水果)"
+          placeholder="输入主营品类"
           clearable
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="健康证图片地址" prop="healthCertUrl">
-        <el-input
-          v-model="queryParams.healthCertUrl"
-          placeholder="请输入健康证图片地址"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="信用积分(满分100)" prop="creditScore">
+      
+      <el-form-item label="信用积分" prop="creditScore">
         <el-input
           v-model="queryParams.creditScore"
-          placeholder="请输入信用积分(满分100)"
+          placeholder="请输入信用积分"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -100,14 +93,25 @@
     <el-table v-loading="loading" :data="vendorList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="摊贩ID" align="center" prop="vendorId" />
-      <el-table-column label="关联sys_user表的账号ID" align="center" prop="userId" />
+      <el-table-column label="账号ID" align="center" prop="userId" />
       <el-table-column label="摊主真实姓名" align="center" prop="vendorName" />
       <el-table-column label="联系电话" align="center" prop="phone" />
-      <el-table-column label="主营品类(如: 烧烤, 水果)" align="center" prop="goodsCategory" />
-      <el-table-column label="健康证图片地址" align="center" prop="healthCertUrl" />
-      <el-table-column label="信用积分(满分100)" align="center" prop="creditScore" />
-      <el-table-column label="审核状态" align="center" prop="status" />
-      <el-table-column label="备注(可存拒审原因)" align="center" prop="remark" />
+      <el-table-column label="主营品类" align="center" prop="goodsCategory" />
+      <el-table-column label="健康证图片" align="center" prop="healthCertUrl" />
+      <el-table-column label="信用积分" align="center" prop="creditScore" />
+      <el-table-column label="审核状态" align="center">
+        <template #default="scope">
+          <el-switch
+            :model-value="scope.row.status"
+            :active-value="1"
+            :inactive-value="0"
+            active-text="通过"
+            inactive-text="未通过"
+            @change="toggleStatus(scope.row, $event)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:vendor:edit']">修改</el-button>
@@ -129,8 +133,8 @@
       <el-form ref="vendorRef" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="24">
-            <el-form-item label="关联sys_user表的账号ID" prop="userId">
-              <el-input v-model="form.userId" placeholder="请输入关联sys_user表的账号ID" />
+            <el-form-item label="账号ID" prop="userId">
+              <el-input v-model="form.userId" placeholder="请输入账号ID" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -223,11 +227,18 @@ const data = reactive({
 
 const { queryParams, form, rules } = toRefs(data)
 
+function normalizeStatus(status) {
+  return String(status) === '1' ? 1 : 0
+}
+
 /** 查询摊贩档案列表 */
 function getList() {
   loading.value = true
   listVendor(queryParams.value).then(response => {
-    vendorList.value = response.rows
+    vendorList.value = (response.rows || []).map(item => ({
+      ...item,
+      status: normalizeStatus(item.status)
+    }))
     total.value = response.total
     loading.value = false
   })
@@ -279,6 +290,20 @@ function handleSelectionChange(selection) {
   multiple.value = !selection.length
 }
 
+/** 切换审核状态 */
+function toggleStatus(row, val) {
+  const prev = row.status
+  const next = normalizeStatus(val)
+  updateVendor({ vendorId: row.vendorId, status: next }).then(() => {
+    row.status = next
+    proxy.$modal.msgSuccess('审核状态已更新')
+  }).catch(() => {
+    // 更新失败，不修改行显示
+    proxy.$modal.msgError('更新审核状态失败')
+    row.status = prev
+  })
+}
+
 /** 新增按钮操作 */
 function handleAdd() {
   reset()
@@ -291,7 +316,10 @@ function handleUpdate(row) {
   reset()
   const _vendorId = row.vendorId || ids.value
   getVendor(_vendorId).then(response => {
-    form.value = response.data
+    form.value = {
+      ...response.data,
+      status: normalizeStatus(response.data?.status)
+    }
     open.value = true
     title.value = "修改摊贩档案"
   })

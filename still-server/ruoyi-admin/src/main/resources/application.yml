@@ -134,6 +134,15 @@ springdoc:
       paths-to-match: '/mini/**'
       packages-to-scan: com.ruoyi.web.controller.mini
 
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    accessKeyId: 
+    accessKeySecret: 
+    bucketName: pvzer
+    urlExpireSeconds: 3600
+
 # 防盗链配置
 referer:
   # 防盗链开关

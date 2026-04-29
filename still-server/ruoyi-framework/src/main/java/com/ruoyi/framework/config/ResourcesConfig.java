@@ -52,7 +52,7 @@ public class ResourcesConfig implements WebMvcConfigurer
         registry.addInterceptor(repeatSubmitInterceptor).addPathPatterns("/**");
         registry.addInterceptor(miniTokenInterceptor)
             .addPathPatterns("/mini/**")
-            .excludePathPatterns("/mini/auth/**");
+            .excludePathPatterns("/mini/auth/**", "/mini/file/upload");
     }
 
     /**
