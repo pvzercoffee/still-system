@@ -67,7 +67,7 @@ spring:
   devtools:
     restart:
       # 热部署开关
-      enabled: true
+      enabled: false
   data:
     # redis 配置
     redis:
@@ -133,6 +133,16 @@ springdoc:
       display-name: '小程序端接口'
       paths-to-match: '/mini/**'
       packages-to-scan: com.ruoyi.web.controller.mini
+
+# 微信小程序配置
+weixin:
+  mini:
+    # 微信小程序 AppID（需要在此处配置真实值）
+    appid: ${WEIXIN_MINI_APPID}
+    # 微信小程序 AppSecret（需要在此处配置真实值）
+    appsecret: ${WEIXIN_MINI_APPSECRET}
+    # code2session API（官方地址，不建议修改）
+    code2sessionUrl: https://api.weixin.qq.com/sns/jscode2session
 
 # 阿里云OSS配置
 aliyun:
